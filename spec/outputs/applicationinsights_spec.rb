@@ -1,19 +1,21 @@
 # encoding: utf-8
 require "logstash/devutils/rspec/spec_helper"
-require "logstash/outputs/loganalytics"
+require "logstash/outputs/applicationinsights"
 require "logstash/codecs/plain"
 require "logstash/event"
 
 describe LogStash::Outputs::ApplicationInsights do
-  let(:client_id) { 'test' }
-  let(:client_secret) { 'test' }
-  let(:table) { 'logstashplugintest' }
+
+  let(:uri) { 'https://dc.services.visualstudio.com/v2/track' }
+  let(:instrumentation_key) { 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' }
+  let(:schema_version) { '2' }
+  let(:source_ip) { '192.168.99.100' }
 
   let(:cfg) {
-    { 
-      "client_id" => client_id, 
-      "client_secret" => client_secret,
-      "table" => table
+    {
+      'uri' => uri,
+      'instrumentation_key' => instrumentation_key,
+      'schema_version' => schema_version
     }
   }
 
@@ -24,14 +26,30 @@ describe LogStash::Outputs::ApplicationInsights do
   end
 
   describe "#receive" do
-    it "Should successfully send the event to log analytics" do
-      log = {
-        :logid => "628cc9db-0aec-4423-83d2-c78c11bd9b94",
-        :message => "this is a test",
-        :level => "info"
+    it "test" do
+      metric = {
+        :data => [
+          {
+            :name => "Count",
+            :value => 1,
+            :dimensions => {
+              :type => "Email",
+              :Machine => "DESKTOP-SKS35DF",
+              :Result => "Success"
+            }
+          },
+          {
+            :name => "Test",
+            :value => 2,
+            :dimensions => {
+              :type => "SMS",
+              :Machine => "DESKTOP-SKS35DF",
+              :Result => "Success"
+            }
+          }
+        ]
       }
-
-      event = LogStash::Event.new(log) 
+      event = LogStash::Event.new(metric)
       expect {output.receive(event)}.to_not raise_error
     end
 
