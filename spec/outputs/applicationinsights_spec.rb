@@ -7,7 +7,7 @@ require "logstash/event"
 describe LogStash::Outputs::ApplicationInsights do
 
   let(:uri) { 'https://dc.services.visualstudio.com/v2/track' }
-  let(:instrumentation_key) { 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' }
+  let(:instrumentation_key) { 'da53126c-26b9-455c-a377-2145797a4ba5' }
   let(:schema_version) { '2' }
   let(:source_ip) { '192.168.99.100' }
 
